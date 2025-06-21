@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RoastBot</title>
+  <title>RoastBot Cursed Edition</title>
   <style>
     body {
       background: #000;
@@ -29,25 +29,75 @@
     }
 
     #face {
-      font-size: 60px;
-      margin-top: 40px;
+      width: 220px;
+      height: 220px;
+      background-color: #111;
+      border-radius: 50%;
+      margin: 40px auto 0;
+      position: relative;
+      box-shadow: 0 0 40px red;
+      transition: transform 0.2s ease;
     }
 
     #eyes {
       display: flex;
-      justify-content: center;
-      gap: 60px;
-      margin-bottom: 10px;
+      justify-content: space-between;
+      position: absolute;
+      top: 60px;
+      left: 30px;
+      right: 30px;
     }
 
     .eye {
-      font-size: 50px;
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pupil {
+      width: 20px;
+      height: 20px;
+      background: black;
+      border-radius: 50%;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      transition: all 0.05s linear;
+    }
+
+    #brows {
+      position: absolute;
+      top: 30px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .brow {
+      width: 50px;
+      height: 10px;
+      background: white;
+      border-radius: 5px;
+      transform: rotate(10deg);
+    }
+
+    .brow.right {
+      transform: rotate(-10deg);
     }
 
     #mouth {
-      font-size: 60px;
-      display: inline-block;
-      transform-origin: center;
+      width: 80px;
+      height: 40px;
+      background: red;
+      border-radius: 0 0 50px 50px;
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .talking {
@@ -55,9 +105,9 @@
     }
 
     @keyframes talk {
-      0% { transform: scaleY(1); }
-      50% { transform: scaleY(0.3); }
-      100% { transform: scaleY(1); }
+      0% { transform: translateX(-50%) scaleY(1); }
+      50% { transform: translateX(-50%) scaleY(0.2); }
+      100% { transform: translateX(-50%) scaleY(1); }
     }
 
     .reaction-box {
@@ -75,126 +125,131 @@
 </head>
 <body>
 
-  <h1>🔥 Roast Bot</h1>
-  <p>I hope you get insulted and cry because fook you ⬇️</p>
+  <h1>🔥 Roast Bot: Cursed Edition</h1>
+  <p>He sees you. He judges you. He **roasts** you. 😈</p>
 
-  <button onclick="startListening()">🎤 Start Talking</button>
+  <button onclick="startListening()">🎤 Summon The Demon</button>
 
   <div id="status"></div>
   <div id="reaction" class="reaction-box" style="display: none;"></div>
 
   <!-- Face -->
   <div id="face">
-    <div id="eyes">
-      <div class="eye">👁️</div>
-      <div class="eye">👁️</div>
+    <div id="brows">
+      <div class="brow"></div>
+      <div class="brow right"></div>
     </div>
-    <div id="mouth">👄</div>
+    <div id="eyes">
+      <div class="eye"><div class="pupil" id="pupil1"></div></div>
+      <div class="eye"><div class="pupil" id="pupil2"></div></div>
+    </div>
+    <div id="mouth"></div>
   </div>
 
   <script>
-// Adding all reactions to your existing code
-const reactions = [
-  "Mate, you talk like you’ve never watched a game in your life.",
-  "Your brain's got fewer working parts than the Tigers' game plan.",
-  "You’d struggle to coach an under-6s team, let alone talk NRL.",
-  "Your footy knowledge is about as useful as a soggy pie at halftime.",
-  "You’ve got less sense than a forward trying to kick on tackle zero.",
-  "You talking NRL is like a winger trying to play prop — embarrassing.",
-  "You’re the kind of fan who boos their own team, aren’t ya?",
-  "You’ve got more missed calls than a bunker on a bad day.",
-  "You're the reason the ref has to explain every decision twice.",
-  "Even the halftime entertainment makes more sense than you.",
-  "You’ve got the IQ of a dropped ball on tackle one.",
-  "Listening to you is like watching the Knights defend — painful.",
-  "You sound like someone who claps when the plane lands.",
-  "You’re the kind of person who calls a field goal a 'touchdown'.",
-  "Your rugby IQ’s been on holiday since the 90s.",
-  "You're more clueless than a sideline reporter at their first game.",
-  "You make the Bunker look decisive.",
-  "Bro, if stupidity was a sin bin offence, you'd be on report permanently.",
-  "You're less reliable than the Eels in finals.",
-  "You talk like you think Origin is played in Perth every year.",
-  "You’re the reason there’s a mute button on the remote.",
-  "You’ve got the footy instincts of a goal post.",
-  "Even the Dragons would bench you — and they’ve got no bench.",
-  "You make the Bulldogs’ recruitment look smart.",
-  "You bring less to this chat than a prop brings to the kicking game.",
-  "You’re the bloke yelling ‘offside!’ in the food queue.",
-  "You're the human version of a dropped pass in goal.",
-  "You’re the type to get tackled by your own teammate.",
-  "Even the ball avoids you, mate.",
-  "Your analysis is like a Tigers rebuild — all talk, no results.",
-  "You’ve got more errors than the entire Broncos’ 2020 season.",
-  "You're what happens when the bunker makes a decision on you personally.",
-  "You talk like you’ve only ever played NRL on the PlayStation.",
-  "You belong on the sideline — as a cone.",
-  "You have less footy sense than a streaker on Mad Monday.",
-  "You’re a walking penalty.",
-  "You're the bloke that yells 'forward pass!' on every play.",
-  "Mate, even a touch judge would ignore you.",
-  "You're the human equivalent of a set restart with no benefit.",
-  "You'd get outplayed by a half-fit reserve grade mascot.",
-  "You’re the opposite of go-forward — just go away.",
-  "You’ve got less impact than a missed shoulder charge.",
-  "You talk like the scoreboard’s always in your head — and you're losing.",
-  "Even the waterboy's got more insight than you.",
-  "You'd miss a tackle on a training dummy.",
-  "Mate, if we were picking a team, you'd be left in the parking lot.",
-  "You’re the sideline flag — just standing there doing nothing useful.",
-  "Your mouth runs faster than your team does during golden point.",
-  "You’ve got more bad takes than the Bunker’s worst season.",
-  "You’re more out of place than a Broncos jersey at a Storm game.",
-  "You’re the person who thinks every NRL club is in Sydney.",
-  "You’ve got the tactical awareness of a loose bootlace.",
-  "You're the kind of fan that thinks 'on report' means detention.",
-  "Your footy brain’s been in the HIA tent since kickoff.",
-  "You're more lost than a fullback under the high ball in a cyclone.",
-  "You talk like you get your stats from TikTok comment sections.",
-  "Mate, you’ve been tackled by common sense and lost yards.",
-  "You’ve got the footy IQ of a broken scoreboard.",
-  "Even the coach’s clipboard has more input than you.",
-  "You’re the reason post-match pressers go off the rails.",
-  "You’ve got more confusion than a halfback on the wrong playbook.",
-  "You're the bloke who thinks the '40/20' is a drink special.",
-  "You have the insight of a brick in the defensive line.",
-  "You talk footy like Siri with a bad signal.",
-  "You’re the sideline distraction nobody asked for.",
-  "You’ve got less timing than a forward pass from dummy half.",
-  "Even the mascot has more understanding of the rules than you.",
-  "You’d fumble a bye week.",
-  "You're basically a set restart for stupidity.",
-  "You’ve got the vision of a ref with fogged-up goggles.",
-  "You'd get sin binned just for talking this much rubbish.",
-  "You belong on the field — as one of the divots.",
-  "Your chat’s got more holes than a Tigers defensive line.",
-  "You’ve got less presence than the Warriors' trophy cabinet.",
-  "Mate, you could be replaced by crowd noise and no one would notice.",
-  "Your idea of strategy is yelling 'RUN IT STRAIGHT!' at the TV.",
-  "You talk like your last game watched was in black and white.",
-  "You make more poor choices than a Bunker in golden point.",
-  "You’re the kind of person that claps off the bus, not the team.",
-  "You’ve got more confusion than a Queenslander in maths class.",
-  "You give off big 'still thinks Benji’s playing' energy.",
-  "Your analysis is like an HIA — nobody knows what’s going on.",
-  "You’d struggle to coach a game of tunnel ball.",
-  "You’ve got the credibility of a bloke yelling from row Z.",
-  "You're more cooked than a hot chip under a stadium seat.",
-  "Even the pre-game entertainment has better form than you.",
-  "You're the kind of fan that brings a cricket bat to a league game.",
-  "You couldn't predict a kickoff if it was scheduled.",
-  "Your NRL knowledge has more gaps than the Roosters salary cap.",
-  "You’re about as helpful as a bye round in finals.",
-  "If effort areas were brains, you’d be on zero stats.",
-  "You'd get benched in a game of touch.",
-  "You’re more delusional than a Tigers fan in March.",
-  "You’re the guy that yells ‘SIX AGAIN’ at the screen — in AFL.",
-  "You belong in the sin bin — for existing.",
-  "You talk like someone whose team hasn’t made finals since VHS tapes.",
-  "You’re what happens when bad takes become sentient.",
-  "Your commentary has the excitement of a flat beer.",
-  "You’ve got more dropped balls than a pub team on Mad Monday."
-];
+	  // Adding all reactions to your existing code
+	  const reactions = [
+	    "Mate, you talk like you’ve never watched a game in your life.",
+	    "Your brain's got fewer working parts than the Tigers' game plan.",
+	    "You’d struggle to coach an under-6s team, let alone talk NRL.",
+	    "Your footy knowledge is about as useful as a soggy pie at halftime.",
+	    "You’ve got less sense than a forward trying to kick on tackle zero.",
+	    "You talking NRL is like a winger trying to play prop — embarrassing.",
+	    "You’re the kind of fan who boos their own team, aren’t ya?",
+	    "You’ve got more missed calls than a bunker on a bad day.",
+	    "You're the reason the ref has to explain every decision twice.",
+	    "Even the halftime entertainment makes more sense than you.",
+	    "You’ve got the IQ of a dropped ball on tackle one.",
+	    "Listening to you is like watching the Knights defend — painful.",
+	    "You sound like someone who claps when the plane lands.",
+	    "You’re the kind of person who calls a field goal a 'touchdown'.",
+	    "Your rugby IQ’s been on holiday since the 90s.",
+	    "You're more clueless than a sideline reporter at their first game.",
+	    "You make the Bunker look decisive.",
+	    "Bro, if stupidity was a sin bin offence, you'd be on report permanently.",
+	    "You're less reliable than the Eels in finals.",
+	    "You talk like you think Origin is played in Perth every year.",
+	    "You’re the reason there’s a mute button on the remote.",
+	    "You’ve got the footy instincts of a goal post.",
+	    "Even the Dragons would bench you — and they’ve got no bench.",
+	    "You make the Bulldogs’ recruitment look smart.",
+	    "You bring less to this chat than a prop brings to the kicking game.",
+	    "You’re the bloke yelling ‘offside!’ in the food queue.",
+	    "You're the human version of a dropped pass in goal.",
+	    "You’re the type to get tackled by your own teammate.",
+	    "Even the ball avoids you, mate.",
+	    "Your analysis is like a Tigers rebuild — all talk, no results.",
+	    "You’ve got more errors than the entire Broncos’ 2020 season.",
+	    "You're what happens when the bunker makes a decision on you personally.",
+	    "You talk like you’ve only ever played NRL on the PlayStation.",
+	    "You belong on the sideline — as a cone.",
+	    "You have less footy sense than a streaker on Mad Monday.",
+	    "You’re a walking penalty.",
+	    "You're the bloke that yells 'forward pass!' on every play.",
+	    "Mate, even a touch judge would ignore you.",
+	    "You're the human equivalent of a set restart with no benefit.",
+	    "You'd get outplayed by a half-fit reserve grade mascot.",
+	    "You’re the opposite of go-forward — just go away.",
+	    "You’ve got less impact than a missed shoulder charge.",
+	    "You talk like the scoreboard’s always in your head — and you're losing.",
+	    "Even the waterboy's got more insight than you.",
+	    "You'd miss a tackle on a training dummy.",
+	    "Mate, if we were picking a team, you'd be left in the parking lot.",
+	    "You’re the sideline flag — just standing there doing nothing useful.",
+	    "Your mouth runs faster than your team does during golden point.",
+	    "You’ve got more bad takes than the Bunker’s worst season.",
+	    "You’re more out of place than a Broncos jersey at a Storm game.",
+	    "You’re the person who thinks every NRL club is in Sydney.",
+	    "You’ve got the tactical awareness of a loose bootlace.",
+	    "You're the kind of fan that thinks 'on report' means detention.",
+	    "Your footy brain’s been in the HIA tent since kickoff.",
+	    "You're more lost than a fullback under the high ball in a cyclone.",
+	    "You talk like you get your stats from TikTok comment sections.",
+	    "Mate, you’ve been tackled by common sense and lost yards.",
+	    "You’ve got the footy IQ of a broken scoreboard.",
+	    "Even the coach’s clipboard has more input than you.",
+	    "You’re the reason post-match pressers go off the rails.",
+	    "You’ve got more confusion than a halfback on the wrong playbook.",
+	    "You're the bloke who thinks the '40/20' is a drink special.",
+	    "You have the insight of a brick in the defensive line.",
+	    "You talk footy like Siri with a bad signal.",
+	    "You’re the sideline distraction nobody asked for.",
+	    "You’ve got less timing than a forward pass from dummy half.",
+	    "Even the mascot has more understanding of the rules than you.",
+	    "You’d fumble a bye week.",
+	    "You're basically a set restart for stupidity.",
+	    "You’ve got the vision of a ref with fogged-up goggles.",
+	    "You'd get sin binned just for talking this much rubbish.",
+	    "You belong on the field — as one of the divots.",
+	    "Your chat’s got more holes than a Tigers defensive line.",
+	    "You’ve got less presence than the Warriors' trophy cabinet.",
+	    "Mate, you could be replaced by crowd noise and no one would notice.",
+	    "Your idea of strategy is yelling 'RUN IT STRAIGHT!' at the TV.",
+	    "You talk like your last game watched was in black and white.",
+	    "You make more poor choices than a Bunker in golden point.",
+	    "You’re the kind of person that claps off the bus, not the team.",
+	    "You’ve got more confusion than a Queenslander in maths class.",
+	    "You give off big 'still thinks Benji’s playing' energy.",
+	    "Your analysis is like an HIA — nobody knows what’s going on.",
+	    "You’d struggle to coach a game of tunnel ball.",
+	    "You’ve got the credibility of a bloke yelling from row Z.",
+	    "You're more cooked than a hot chip under a stadium seat.",
+	    "Even the pre-game entertainment has better form than you.",
+	    "You're the kind of fan that brings a cricket bat to a league game.",
+	    "You couldn't predict a kickoff if it was scheduled.",
+	    "Your NRL knowledge has more gaps than the Roosters salary cap.",
+	    "You’re about as helpful as a bye round in finals.",
+	    "If effort areas were brains, you’d be on zero stats.",
+	    "You'd get benched in a game of touch.",
+	    "You’re more delusional than a Tigers fan in March.",
+	    "You’re the guy that yells ‘SIX AGAIN’ at the screen — in AFL.",
+	    "You belong in the sin bin — for existing.",
+	    "You talk like someone whose team hasn’t made finals since VHS tapes.",
+	    "You’re what happens when bad takes become sentient.",
+	    "Your commentary has the excitement of a flat beer.",
+	    "You’ve got more dropped balls than a pub team on Mad Monday."
+    ];
+
     const status = document.getElementById("status");
     const reactionDiv = document.getElementById("reaction");
     const mouth = document.getElementById("mouth");
@@ -211,14 +266,14 @@ const reactions = [
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
-      status.innerText = "Listening... 🎙️";
+      status.innerText = "Listening to your nonsense... 🎙️";
       reactionDiv.style.display = "none";
 
       recognition.start();
 
       recognition.onresult = (event) => {
         const take = event.results[0][0].transcript;
-        status.innerText = `You said: "${take}"`;
+        status.innerText = `You dared say: "${take}"`;
 
         const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
         reactionDiv.innerText = `"${randomReaction}"`;
@@ -236,7 +291,7 @@ const reactions = [
       const synth = window.speechSynthesis;
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = 'en-AU';
-      utter.pitch = 1;
+      utter.pitch = 0.8;
       utter.rate = 1;
 
       utter.onstart = () => {
@@ -249,6 +304,29 @@ const reactions = [
 
       synth.speak(utter);
     }
+
+    // Eyes follow mouse
+    const pupil1 = document.getElementById("pupil1");
+    const pupil2 = document.getElementById("pupil2");
+
+    document.addEventListener("mousemove", (e) => {
+      const face = document.getElementById("face");
+      const rect = face.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const dx = e.clientX - centerX;
+      const dy = e.clientY - centerY;
+
+      const angle = Math.atan2(dy, dx);
+      const distance = Math.min(15, Math.hypot(dx, dy) / 10);
+
+      const offsetX = Math.cos(angle) * distance;
+      const offsetY = Math.sin(angle) * distance;
+
+      pupil1.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+      pupil2.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    });
   </script>
 </body>
 </html>
